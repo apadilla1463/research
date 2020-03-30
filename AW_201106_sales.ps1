@@ -39,7 +39,7 @@ $DataSet = New-Object System.Data.DataSet;
 $SqlAdapter.Fill($DataSet);
 $DataSetTable = $DataSet.Tables["Table"];
 
-## ---------- Working with Excel ---------- ##
+## ---------- Working with Excel File ---------- ##
 
 ## - Create an Excel Application instance:
 $xlsObj = New-Object -ComObject Excel.Application;
@@ -105,6 +105,10 @@ $xlsObj.ActiveWorkbook.SaveAs($xlsFile);
 $xlsObj.ActiveWorkbook.Close($xlsFile);
 
 ## Quit Excel and Terminate Excel Application process:
-$xlsObj.Quit(); (Get-Process Excel*) | foreach ($_) { $_.kill() };
+$xlsObj.Quit(); #(Get-Process Excel*) | foreach ($_) { $_.kill() };
+[System.GC]::Collect()
+[System.GC]::WaitForPendingFinalizers()
+[System.Runtime.Interopservices.Marshal]::ReleaseComObject($xlsObj) | Out-Null;
+
 
 ## - End of Script - ##
